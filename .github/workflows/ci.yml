@@ -27,17 +27,20 @@ jobs:
       run: |
         curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 
-    - name: Authenticate with Azure
-      uses: azure/login@v1
+    # Logs in with your Azure credentials
+    - name: Azure login
+      uses: azure/login@v1.4.6
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
 
     - name: Ensure storage account and container exist
       env:
         AZ_RG_NAME: "terraform-resource-group"
         AZ_STORAGE_ACCOUNT_NAME: "spacelybackendhd"
         AZ_CONTAINER_NAME: "tfstate"
-        SUBSCRIPTION_ID: "aa1c35b4-ab63-446a-8f2b-9481db0e589b"
+        SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
       run: |
         az group create --name $AZ_RG_NAME --location eastus --subscription $SUBSCRIPTION_ID || echo "Resource group already exists."
         if ! az storage account show --name $AZ_STORAGE_ACCOUNT_NAME --resource-group $AZ_RG_NAME --subscription $SUBSCRIPTION_ID; then
