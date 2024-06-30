@@ -55,7 +55,7 @@ variable "oms_sku" {
 variable "acr_name" {
   description = "Specify the name of the Azure Container Registry."
   type        = string
-  default     = "spacelysprockets"
+  default     = "spacelysprocketshd"
 }
 
 variable "agent_count" {
@@ -73,7 +73,7 @@ variable "agent_vm_size" {
 variable "os_disk_size_gb" {
   description = "Disk size (in GiB) to provision for each of the agent pool nodes."
   type        = number
-  default     = 250
+  default     = 10
 }
 
 variable "enable_auto_scaling" {

@@ -23,6 +23,44 @@ jobs:
       run: |
         pip install -r app/requirements.txt
 
+    - name: Set up Azure CLI
+      uses: azure/cli@v1
+
+    - name: Authenticate with Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Ensure storage account and container exist
+      env:
+        AZ_RG_NAME: "terraform-resource-group"
+        AZ_STORAGE_ACCOUNT_NAME: "spacelybackend"
+        AZ_CONTAINER_NAME: "tfstate"
+        SUBSCRIPTION_ID: "aa1c35b4-ab63-446a-8f2b-9481db0e589b"
+      run: |
+        # Create Resource Group if it does not exist
+        az group create --name $AZ_RG_NAME --location eastus --subscription $SUBSCRIPTION_ID || echo "Resource group already exists."
+
+        # Create Storage Account if it does not exist
+        if ! az storage account show --name $AZ_STORAGE_ACCOUNT_NAME --resource-group $AZ_RG_NAME --subscription $SUBSCRIPTION_ID; then
+          az storage account create --name $AZ_STORAGE_ACCOUNT_NAME --resource-group $AZ_RG_NAME --location eastus --sku Standard_LRS --subscription $SUBSCRIPTION_ID
+        fi
+
+        # Get the storage account key
+        AZ_STORAGE_KEY=$(az storage account keys list --resource-group $AZ_RG_NAME --account-name $AZ_STORAGE_ACCOUNT_NAME --query '[0].value' --output tsv --subscription $SUBSCRIPTION_ID)
+
+        # Create blob container if it does not exist
+        az storage container create --name $AZ_CONTAINER_NAME --account-name $AZ_STORAGE_ACCOUNT_NAME --account-key $AZ_STORAGE_KEY --subscription $SUBSCRIPTION_ID || echo "Container already exists."
+
+    - name: Initialize Terraform
+      run: terraform init -backend-config="resource_group_name=terraform-resource-group" -backend-config="storage_account_name=spacelybackend" -backend-config="container_name=tfstate" -backend-config="key=terraform.tfstate"
+
+    - name: Plan Terraform
+      run: terraform plan
+
+    - name: Apply Terraform
+      run: terraform apply -auto-approve
+
     - name: Read version from file
       id: version
       run: echo "::set-output name=VERSION::$(cat app/version.txt)"
