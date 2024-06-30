@@ -36,4 +36,8 @@ jobs:
         echo ${{ secrets.ACR_PASSWORD }} | docker login spacelysprockets.azurecr.io -u ${{ secrets.ACR_USERNAME }} --password-stdin
 
     - name: Push Docker image
+<<<<<<< HEAD
+      run: docker push spacelysprocketshd.azurecr.io/visitor-counter:${{ steps.version.outputs.VERSION }}
+=======
       run: docker push spacelysprockets.azurecr.io/visitor-counter:${{ steps.version.outputs.VERSION }}
+>>>>>>> parent of 9669f6f (GitHub Actions test)

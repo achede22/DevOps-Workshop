@@ -96,5 +96,3 @@
     sku                 = "Basic"
     admin_enabled       = true
   }
-
-  
