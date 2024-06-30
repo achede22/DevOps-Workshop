@@ -35,7 +35,7 @@ jobs:
     - name: Ensure storage account and container exist
       env:
         AZ_RG_NAME: "terraform-resource-group"
-        AZ_STORAGE_ACCOUNT_NAME: "spacelybackend"
+        AZ_STORAGE_ACCOUNT_NAME: "spacelybackendhd"
         AZ_CONTAINER_NAME: "tfstate"
         SUBSCRIPTION_ID: "aa1c35b4-ab63-446a-8f2b-9481db0e589b"
       run: |

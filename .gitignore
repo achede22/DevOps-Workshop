@@ -21,3 +21,9 @@ infra/provider.tf
 
 # Script to send Terraform credentials to Env Vars.
 scripts/secret-envvars.sh
+
+# Azure Credentials
+AZURE_CREDENTIALS.json
+
+# Service Principal Credentials
+SERVICE_PRINCIPALS.json
