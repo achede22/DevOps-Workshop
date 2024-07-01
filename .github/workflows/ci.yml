@@ -55,7 +55,7 @@ jobs:
         az storage container create --name $AZ_CONTAINER_NAME --account-name $AZ_STORAGE_ACCOUNT_NAME --account-key $AZ_STORAGE_KEY --subscription $SUBSCRIPTION_ID || echo "Container already exists."
         echo "AZ_STORAGE_KEY=$AZ_STORAGE_KEY" >> $GITHUB_ENV
 
-    - name: Debug: Print Environment Variables
+    - name: Print Environment Variables
       run: |
         echo "AZ_RG_NAME=$AZ_RG_NAME"
         echo "AZ_STORAGE_ACCOUNT_NAME=$AZ_STORAGE_ACCOUNT_NAME"
