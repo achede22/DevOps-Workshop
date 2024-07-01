@@ -39,12 +39,7 @@ jobs:
         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
         subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        auth-type: federated # Options are 'device', 'service_principal' or 'resource'
-
-        # Warning: valid inputs are 
-        # ['creds', 'client-id', 'tenant-id', 'subscription-id', 
-        # 'enable-AzPSSession', 'environment', 'allow-no-subscriptions', 'audience', 'auth-type']
-
+  
 
     - name: Ensure storage account and container exist
       env:
