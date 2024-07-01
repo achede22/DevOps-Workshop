@@ -55,6 +55,14 @@ jobs:
         az storage container create --name $AZ_CONTAINER_NAME --account-name $AZ_STORAGE_ACCOUNT_NAME --account-key $AZ_STORAGE_KEY --subscription $SUBSCRIPTION_ID || echo "Container already exists."
         echo "AZ_STORAGE_KEY=$AZ_STORAGE_KEY" >> $GITHUB_ENV
 
+    - name: Debug: Print Environment Variables
+      run: |
+        echo "AZ_RG_NAME=$AZ_RG_NAME"
+        echo "AZ_STORAGE_ACCOUNT_NAME=$AZ_STORAGE_ACCOUNT_NAME"
+        echo "AZ_CONTAINER_NAME=$AZ_CONTAINER_NAME"
+        echo "SUBSCRIPTION_ID=$SUBSCRIPTION_ID"
+        echo "AZ_STORAGE_KEY=$AZ_STORAGE_KEY"
+
     - name: Terraform Init
       env:
         ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
@@ -63,7 +71,7 @@ jobs:
         ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
         ARM_ACCESS_KEY: ${{ env.AZ_STORAGE_KEY }}
       working-directory: infra
-      run: terraform init
+      run: terraform init -backend-config="resource_group_name=${{ env.AZ_RG_NAME }}" -backend-config="storage_account_name=${{ env.AZ_STORAGE_ACCOUNT_NAME }}" -backend-config="container_name=${{ env.AZ_CONTAINER_NAME }}" -backend-config="key=terraform.tfstate" -backend-config="access_key=${{ env.AZ_STORAGE_KEY }}"
 
     - name: Plan Terraform
       env:
